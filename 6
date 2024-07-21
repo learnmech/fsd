@@ -1,0 +1,44 @@
+)admin.py
+from django.contrib import admin
+from ap3.models import Course, Student
+# Register your models here.
+admin.site.register(Student)
+admin.site.register(Course)
+
+models.py
+from django.db import models
+# Create your models here.
+class Course(models.Model):
+course_code=models.CharField(max_length=40)
+course_name=models.CharField(max_length=100)
+course_credits=models.IntegerField()
+def __str__(self):
+return self.course_name
+class Student(models.Model):
+student_usn=models.CharField(max_length=20)
+student_name=models.CharField(max_length=100)
+student_sem=models.IntegerField()
+enrolment=models.ManyToManyField(Course)
+def __str__(self):
+return self.student_name+"("+self.student_usn+")"
+
+Updating urls.py
+from ap3.views import reg, course_search
+admin.site.site_header="My Site Header"
+admin.site.site_title="My Site Title"
+admin.site.index_title="My Site Index"
+
+Updating models.py (removing compulsory field )
+In course
+course_credits=models.IntegerField(blank=True, null=True)
+and run the migration commands
+python manage.py makemigrations ap3
+python manage.py migrate
+customizing admin
+in admin.py
+#admin.site.register(Student)
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+list_display = ('student_name','student_usn','student_sem')
+ordering=('student_name',)
+search_fields = ('student_name',)
